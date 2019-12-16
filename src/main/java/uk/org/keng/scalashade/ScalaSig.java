@@ -371,7 +371,7 @@ class ScalaSig {
      * @param minorVersion minor version
      * @param table        table of entries in signature
      */
-    private ScalaSig(int majorVersion, int minorVersion, Table table) {
+    public ScalaSig(int majorVersion, int minorVersion, Table table) {
         _majorVersion = majorVersion;
         _minorVersion = minorVersion;
         _table = table;

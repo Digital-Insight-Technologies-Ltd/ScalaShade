@@ -92,7 +92,8 @@ class JarShade {
                     try {
                         ScalaSigClass sigClass = new ScalaSigClass(entry.getName(), in);
                         ScalaSig sig = sigClass.getSig();
-                        if (sig != null && sig.replace(from, to) > 0) {
+                        if (sig != null) {
+                        //if (sig != null && sig.replace(from, to) > 0) {
                             // This one need re-writing, swap input stream to updated version
                             in.close();
                             in = new ByteArrayInputStream(sigClass.getBytes());

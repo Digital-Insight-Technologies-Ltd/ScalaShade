@@ -16,6 +16,7 @@
 
 package uk.org.keng.scalashade;
 
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AnnotationNode;
@@ -82,7 +83,7 @@ class ScalaSigClass {
         if (_clazz.visibleAnnotations != null) {
             //noinspection unchecked
             for (AnnotationNode an : visibleAnnotations(_clazz)) {
-                if (an.desc.equals("Lscala/reflect/ScalaSignature;")) {
+                if (an.desc.equals("Lshaded/scala/reflect/ScalaSignature;")) {
                     if (sigAnnotation != -1)
                         throw new CtxException("Multiple ScalaSignature annotations found in: " + path);
                     if (an.values.size() != 2)
@@ -98,7 +99,7 @@ class ScalaSigClass {
                     byte[] sigBytes = Encoding.decode(sigString);
                     if (sigBytes == null)
                         throw new CtxException("ScalaSignature could not be decoded in" + path);
-                    sig = ScalaSig.parse(sigBytes);
+                    sig = new ScalaSig(1, 0, null);
                     sigAnnotation = at;
                 }
                 at++;
@@ -139,7 +140,13 @@ class ScalaSigClass {
     public byte[] getBytes() {
         // Update annotation
         if (sigAnnotation != -1) {
-            ( visibleAnnotations(_clazz).get(sigAnnotation)).values.set(1, Encoding.encode(sig.asBytes()));
+            visibleAnnotations(_clazz).remove(sigAnnotation); //.get(sigAnnotation)).values.set(1, Encoding.encode(sig.asBytes()));
+            for (int i = 0; i < _clazz.attrs.size(); i++) {
+                if (((Attribute)_clazz.attrs.get(i)).type.equals("ScalaSig")) {
+                    _clazz.attrs.remove(i);
+                    break;
+                }
+            }
         }
 
         // Convert to byte code
