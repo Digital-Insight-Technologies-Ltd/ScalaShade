@@ -1,3 +1,7 @@
+## Fork modification
+
+This is for dealing with libraries made with the *wrong* version of scala. We shade the scala namespace in the library to shaded.scala (using the maven shade plugin), then use this to completely remove the scala signature attribute and annotation, so that the library can be used from a more recent version of scala without binding issues.
+
 ScalaShade
 ==========
 
